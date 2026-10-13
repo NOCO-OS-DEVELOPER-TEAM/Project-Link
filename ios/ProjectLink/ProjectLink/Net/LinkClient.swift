@@ -66,7 +66,7 @@ final class LinkClient: ObservableObject {
         let conn = NWConnection(host: host, port: port, using: .tcp)
         connection = conn
         conn.stateUpdateHandler = { [weak self] st in
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
                 guard let self else { return }
                 switch st {
                 case .ready:
@@ -177,7 +177,7 @@ final class LinkClient: ObservableObject {
     private func startLatency() {
         latencyTimer?.invalidate()
         latencyTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
-            Task { @MainActor in self?.probeLatency() }
+            Task { @MainActor [weak self] in self?.probeLatency() }
         }
     }
 
@@ -195,14 +195,14 @@ final class LinkClient: ObservableObject {
     func sendRaw(_ frame: Data) {
         connection?.send(content: frame, completion: .contentProcessed { [weak self] err in
             if let err {
-                Task { @MainActor in self?.log("Send error: \(err.localizedDescription)") }
+                Task { @MainActor [weak self] in self?.log("Send error: \(err.localizedDescription)") }
             }
         })
     }
 
     private func startReceive() {
         connection?.receive(minimumIncompleteLength: 1, maximumLength: 1024 * 1024) { [weak self] content, _, isComplete, error in
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
                 guard let self else { return }
                 if let content { self.receiveBuffer.append(content); self.consumeFrames() }
                 if isComplete || error != nil {

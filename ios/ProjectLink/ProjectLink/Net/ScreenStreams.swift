@@ -25,7 +25,7 @@ final class PcScreenReceiver: ObservableObject {
         let conn = NWConnection(host: h, port: p, using: .tcp)
         connection = conn
         conn.stateUpdateHandler = { [weak self] st in
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
                 switch st {
                 case .ready:
                     self?.connected = true
@@ -49,7 +49,7 @@ final class PcScreenReceiver: ObservableObject {
 
     private func receive() {
         connection?.receive(minimumIncompleteLength: 1, maximumLength: 2_000_000) { [weak self] content, _, isComplete, error in
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
                 guard let self else { return }
                 if let content {
                     self.buffer.append(content)
@@ -107,7 +107,7 @@ final class PhoneScreenStreamer: ObservableObject {
         let conn = NWConnection(host: h, port: p, using: .tcp)
         connection = conn
         conn.stateUpdateHandler = { [weak self] st in
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
                 switch st {
                 case .ready:
                     self?.beginReplayKit()
@@ -138,12 +138,12 @@ final class PhoneScreenStreamer: ObservableObject {
         }
         recorder.isMicrophoneEnabled = false
         recorder.startCapture { [weak self] sample, bufferType, err in
-            guard bufferType == .video, err == nil, let self else { return }
-            Task { @MainActor in
-                self.handle(sample)
+            guard bufferType == .video, err == nil else { return }
+            Task { @MainActor [weak self] in
+                self?.handle(sample)
             }
         } completionHandler: { [weak self] err in
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
                 if let err {
                     self?.error = err.localizedDescription
                     self?.streaming = false

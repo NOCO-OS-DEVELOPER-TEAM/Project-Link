@@ -9,16 +9,21 @@ struct ProjectLinkApp: App {
             ContentView()
                 .preferredColorScheme(.dark)
                 .onOpenURL { url in
-                    handle(url)
+                    Task { @MainActor in
+                        handle(url)
+                    }
                 }
         }
         .onChange(of: scenePhase) { phase in
             if phase == .active {
-                LinkClient.shared.syncClipboardOnForeground()
+                Task { @MainActor in
+                    LinkClient.shared.syncClipboardOnForeground()
+                }
             }
         }
     }
 
+    @MainActor
     private func handle(_ url: URL) {
         // projectlink://clip?text=hello  or projectlink://pair?json=...
         guard url.scheme == "projectlink" else { return }
