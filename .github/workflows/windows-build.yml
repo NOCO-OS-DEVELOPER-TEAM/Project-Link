@@ -1,0 +1,22 @@
+name: Build Windows App
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      - name: Publish
+        run: |
+          dotnet publish windows/ProjectLink/ProjectLink.csproj -c Release -r win-x64 --self-contained false -o artifacts/windows
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ProjectLink-windows
+          path: artifacts/windows/

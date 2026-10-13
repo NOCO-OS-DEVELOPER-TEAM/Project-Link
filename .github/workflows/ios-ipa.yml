@@ -1,0 +1,66 @@
+name: Build iOS IPA
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ipa:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Build (unsigned for sideload)
+        working-directory: ios/ProjectLink
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project ProjectLink.xcodeproj \
+            -scheme ProjectLink \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            build
+
+      - name: Package IPA
+        working-directory: ios/ProjectLink
+        run: |
+          set -euo pipefail
+          APP=$(find build/Build/Products/Release-iphoneos -name 'ProjectLink.app' | head -n1)
+          echo "APP=$APP"
+          rm -rf Payload ProjectLink.ipa
+          mkdir Payload
+          cp -R "$APP" Payload/
+          zip -qr ProjectLink.ipa Payload
+          mkdir -p ../../artifacts
+          cp ProjectLink.ipa ../../artifacts/ProjectLink.ipa
+          ls -lh ProjectLink.ipa
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ProjectLink-ipa
+          path: artifacts/ProjectLink.ipa
+          if-no-files-found: error
+
+      - name: Attach IPA to release tag (optional)
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: Project Link IPA #${{ github.run_number }}
+          files: artifacts/ProjectLink.ipa
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

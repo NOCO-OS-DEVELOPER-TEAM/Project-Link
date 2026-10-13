@@ -1,0 +1,299 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3396E4B876174E598DF23590 /* ProjectLinkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADF1F32519A4D0BA3744968 /* ProjectLinkApp.swift */; };
+		765A363C1D05461380CC33DE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF9AAC697597458D8FD0E001 /* ContentView.swift */; };
+		6F06B65C25CA44FD9B5DDFE8 /* Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A8229EC5A643BD86A8750F /* Protocol.swift */; };
+		ED00A313D2D441F7BA131E6A /* LinkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6138A04E03BD45BD8CA69C61 /* LinkClient.swift */; };
+		4A28DAAF4E1248D3B0ECB44C /* ScreenStreams.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1EBA7DCFB14064B99B8284 /* ScreenStreams.swift */; };
+		646A241681D94B8E9B11CAD7 /* RainbowTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83E09EF3FB0B45DCB940C670 /* RainbowTheme.swift */; };
+		6D78FA29396D4512AEB01512 /* PairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8910DC32DB204B7FAA6C6632 /* PairingView.swift */; };
+		B97D638A26A34DCFBE00BA76 /* TouchpadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A46021FCA5C241769CBBA7C6 /* TouchpadView.swift */; };
+		C56EC9521EB74F97AAD5CB5E /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB1B2AC79C0A4D49A648FE63 /* KeyboardView.swift */; };
+		488CAB279D5C4771948C5836 /* LiveScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8419A48A1C07435196B3C2D7 /* LiveScreenView.swift */; };
+		8131ACB5424F45538273A91C /* ClipboardFilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AB18B534AF042028D15D9C9 /* ClipboardFilesView.swift */; };
+		F9BBE967D119487BB73B46CD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 071687469B614FCB9008643C /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0ADF1F32519A4D0BA3744968 /* ProjectLinkApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectLinkApp.swift; sourceTree = "<group>"; };
+		EF9AAC697597458D8FD0E001 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		17A8229EC5A643BD86A8750F /* Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocol.swift; sourceTree = "<group>"; };
+		6138A04E03BD45BD8CA69C61 /* LinkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkClient.swift; sourceTree = "<group>"; };
+		BC1EBA7DCFB14064B99B8284 /* ScreenStreams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenStreams.swift; sourceTree = "<group>"; };
+		83E09EF3FB0B45DCB940C670 /* RainbowTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RainbowTheme.swift; sourceTree = "<group>"; };
+		8910DC32DB204B7FAA6C6632 /* PairingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingView.swift; sourceTree = "<group>"; };
+		A46021FCA5C241769CBBA7C6 /* TouchpadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchpadView.swift; sourceTree = "<group>"; };
+		CB1B2AC79C0A4D49A648FE63 /* KeyboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardView.swift; sourceTree = "<group>"; };
+		8419A48A1C07435196B3C2D7 /* LiveScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveScreenView.swift; sourceTree = "<group>"; };
+		5AB18B534AF042028D15D9C9 /* ClipboardFilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardFilesView.swift; sourceTree = "<group>"; };
+		071687469B614FCB9008643C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		467FA90DB58343A7B5A437E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C7A7B528F70B4C76B87944C3 /* ProjectLink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProjectLink.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		384AAB04BE7443B8A0DC6CF1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		537139CC89A642D488482B5F = {
+			isa = PBXGroup;
+			children = (
+				A4FE04BE9E6B4BC88F4ACF78 /* ProjectLink */,
+				03840205579343918D4C6B51 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		03840205579343918D4C6B51 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C7A7B528F70B4C76B87944C3 /* ProjectLink.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A4FE04BE9E6B4BC88F4ACF78 /* ProjectLink */ = {
+			isa = PBXGroup;
+			children = (
+				0ADF1F32519A4D0BA3744968 /* ProjectLinkApp.swift */,
+				EF9AAC697597458D8FD0E001 /* ContentView.swift */,
+				B1B0323E56D24FDBAF27FB2C /* Net */,
+				B188BAF8CC8B4660A66289E5 /* Theme */,
+				1C64E84C95F04758A468FAB2 /* Views */,
+				071687469B614FCB9008643C /* Assets.xcassets */,
+				467FA90DB58343A7B5A437E7 /* Info.plist */,
+			);
+			path = ProjectLink;
+			sourceTree = "<group>";
+		};
+		B1B0323E56D24FDBAF27FB2C /* Net */ = {
+			isa = PBXGroup;
+			children = (
+				17A8229EC5A643BD86A8750F /* Protocol.swift */,
+				6138A04E03BD45BD8CA69C61 /* LinkClient.swift */,
+				BC1EBA7DCFB14064B99B8284 /* ScreenStreams.swift */,
+			);
+			path = Net;
+			sourceTree = "<group>";
+		};
+		B188BAF8CC8B4660A66289E5 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				83E09EF3FB0B45DCB940C670 /* RainbowTheme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		1C64E84C95F04758A468FAB2 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8910DC32DB204B7FAA6C6632 /* PairingView.swift */,
+				A46021FCA5C241769CBBA7C6 /* TouchpadView.swift */,
+				CB1B2AC79C0A4D49A648FE63 /* KeyboardView.swift */,
+				8419A48A1C07435196B3C2D7 /* LiveScreenView.swift */,
+				5AB18B534AF042028D15D9C9 /* ClipboardFilesView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F2619782EB554067B1362DD2 /* ProjectLink */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 341B096BC155437A83D0B1F2 /* Build configuration list for PBXNativeTarget "ProjectLink" */;
+			buildPhases = (
+				E6C496DD34F04976B54E7AF7 /* Sources */,
+				384AAB04BE7443B8A0DC6CF1 /* Frameworks */,
+				8EECA132697C47B68F8D5EFA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ProjectLink;
+			productName = ProjectLink;
+			productReference = C7A7B528F70B4C76B87944C3 /* ProjectLink.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DF28AB92DD804511BEF28E7C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+			};
+			buildConfigurationList = 8D0EC22D562D4464BDEBECE9 /* Build configuration list for PBXProject "ProjectLink" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 537139CC89A642D488482B5F;
+			productRefGroup = 03840205579343918D4C6B51 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F2619782EB554067B1362DD2 /* ProjectLink */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8EECA132697C47B68F8D5EFA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F9BBE967D119487BB73B46CD /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E6C496DD34F04976B54E7AF7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3396E4B876174E598DF23590 /* ProjectLinkApp.swift in Sources */,
+				765A363C1D05461380CC33DE /* ContentView.swift in Sources */,
+				6F06B65C25CA44FD9B5DDFE8 /* Protocol.swift in Sources */,
+				ED00A313D2D441F7BA131E6A /* LinkClient.swift in Sources */,
+				4A28DAAF4E1248D3B0ECB44C /* ScreenStreams.swift in Sources */,
+				646A241681D94B8E9B11CAD7 /* RainbowTheme.swift in Sources */,
+				6D78FA29396D4512AEB01512 /* PairingView.swift in Sources */,
+				B97D638A26A34DCFBE00BA76 /* TouchpadView.swift in Sources */,
+				C56EC9521EB74F97AAD5CB5E /* KeyboardView.swift in Sources */,
+				488CAB279D5C4771948C5836 /* LiveScreenView.swift in Sources */,
+				8131ACB5424F45538273A91C /* ClipboardFilesView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		6AF3E5AD59B64F89A9CD0F90 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_DYNAMIC_NO_PIC = NO;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		5C8ACFAB4A384DB88213C7E1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D9EE8A4530FF4F68BB926511 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ProjectLink/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.noco.projectlink;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		69DC9B66373E44898BFCFD0F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ProjectLink/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.noco.projectlink;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8D0EC22D562D4464BDEBECE9 /* Build configuration list for PBXProject "ProjectLink" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AF3E5AD59B64F89A9CD0F90 /* Debug */,
+				5C8ACFAB4A384DB88213C7E1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		341B096BC155437A83D0B1F2 /* Build configuration list for PBXNativeTarget "ProjectLink" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D9EE8A4530FF4F68BB926511 /* Debug */,
+				69DC9B66373E44898BFCFD0F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DF28AB92DD804511BEF28E7C /* Project object */;
+}
