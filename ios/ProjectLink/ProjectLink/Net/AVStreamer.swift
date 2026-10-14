@@ -88,7 +88,7 @@ final class AVStreamer: NSObject, ObservableObject {
         let conn = NWConnection(host: NWEndpoint.Host(host), port: 47805, using: .tcp)
         camConn = conn
         conn.stateUpdateHandler = { [weak self] st in
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
                 if case .ready = st {
                     self?.cameraOn = true
                     if !(self?.session.isRunning ?? true) { self?.session.startRunning() }
@@ -112,7 +112,7 @@ final class AVStreamer: NSObject, ObservableObject {
         let conn = NWConnection(host: NWEndpoint.Host(host), port: 47806, using: .tcp)
         micConn = conn
         conn.stateUpdateHandler = { [weak self] st in
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
                 if case .ready = st { self?.micOn = true }
                 if case .failed(let e) = st { self?.error = e.localizedDescription; self?.micOn = false }
             }
