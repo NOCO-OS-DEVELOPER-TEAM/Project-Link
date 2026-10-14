@@ -68,7 +68,7 @@ public sealed class ScreenCaptureService : IDisposable
                 while (!ct.IsCancellationRequested && client.Connected)
                 {
                     var cfg = _cfg;
-                    var frameDelay = Math.Max(8, 1000 / Math.Max(1, cfg.Fps));
+                    var frameDelay = Math.Max(5, 1000 / Math.Max(1, cfg.Fps));
                     var jpeg = CaptureJpeg(cfg.MaxWidth, cfg.MaxHeight, cfg.JpegQuality);
                     if (jpeg.Length == 0)
                     {

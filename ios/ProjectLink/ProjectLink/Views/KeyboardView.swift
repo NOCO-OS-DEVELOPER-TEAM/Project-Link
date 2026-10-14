@@ -4,8 +4,8 @@ struct KeyboardView: View {
     @ObservedObject var client = LinkClient.shared
     @State private var text = ""
     @State private var launch = ""
+    @FocusState private var focused: Bool
 
-    // Common Windows VKs
     private let specials: [(String, UInt16, UInt16)] = [
         ("Esc", 0x1B, 0),
         ("Tab", 0x09, 0),
@@ -33,13 +33,26 @@ struct KeyboardView: View {
                     .font(.title2.bold())
                     .foregroundStyle(.white)
 
-                TextField("Type and send as key events…", text: $text)
-                    .textFieldStyle(.roundedBorder)
-                    .submitLabel(.send)
-                    .onSubmit { flushText() }
+                Text("Live — jeder Buchstabe geht sofort an den PC.")
+                    .font(.footnote)
+                    .foregroundStyle(RainbowTheme.textMuted)
 
-                Button("Send text") { flushText() }
-                    .buttonStyle(GlowButtonStyle())
+                TextField("Tippen…", text: $text)
+                    .textFieldStyle(.roundedBorder)
+                    .focused($focused)
+                    .submitLabel(.return)
+                    .onAppear {
+                        client.resetTypedBuffer()
+                        focused = true
+                    }
+                    .onChange(of: text) { newValue in
+                        client.sendTypedDelta(newValue)
+                    }
+                    .onSubmit {
+                        client.typeText("\n")
+                        text = ""
+                        client.resetTypedBuffer()
+                    }
 
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 90), spacing: 8)], spacing: 8) {
                     ForEach(specials, id: \.0) { item in
@@ -59,42 +72,13 @@ struct KeyboardView: View {
                 HStack {
                     TextField("notepad / chrome / spotify", text: $launch)
                         .textFieldStyle(.roundedBorder)
-                    Button("Go") {
-                        client.launch(launch)
-                    }
-                    .buttonStyle(GlowButtonStyle())
+                    Button("Go") { client.launch(launch) }
+                        .buttonStyle(GlowButtonStyle())
                 }
+                Button("Open Windows Notepad") { client.launch("notepad") }
+                    .buttonStyle(GlowButtonStyle())
             }
             .padding(16)
         }
-    }
-
-    private func flushText() {
-        // Send printable ASCII as VK where possible; else clipboard paste path
-        for ch in text {
-            if let scalar = ch.unicodeScalars.first, scalar.isASCII {
-                let vk = UInt16(vkFromASCII(UInt8(scalar.value)))
-                if vk != 0 {
-                    let shift: UInt16 = needsShift(UInt8(scalar.value)) ? 2 : 0
-                    client.key(vk, down: true, mods: shift)
-                    client.key(vk, down: false, mods: shift)
-                }
-            }
-        }
-        text = ""
-    }
-
-    private func vkFromASCII(_ c: UInt8) -> UInt8 {
-        let upper = Character(UnicodeScalar(c)).uppercased().utf8.first ?? c
-        switch upper {
-        case 0x30...0x39, 0x41...0x5A: return upper
-        case 0x20: return 0x20
-        default: return 0
-        }
-    }
-
-    private func needsShift(_ c: UInt8) -> Bool {
-        let s = Character(UnicodeScalar(c))
-        return s.isUppercase || "!@#$%^&*()_+{}|:\"<>?".contains(s)
     }
 }

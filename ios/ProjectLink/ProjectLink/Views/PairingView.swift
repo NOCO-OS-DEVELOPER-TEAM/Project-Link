@@ -3,9 +3,11 @@ import AVFoundation
 
 struct PairingView: View {
     @ObservedObject var client = LinkClient.shared
+    @StateObject private var ble = BleBrowser()
     @State private var showScanner = false
     @State private var manualJSON = ""
     @State private var showManual = false
+    @State private var showBle = false
 
     var body: some View {
         VStack(spacing: 20) {
@@ -13,7 +15,7 @@ struct PairingView: View {
                 Text("PROJECT LINK")
                     .font(.system(size: 34, weight: .bold, design: .rounded))
                     .foregroundStyle(RainbowTheme.aurora)
-                Text("Scan the rainbow QR on your PC")
+                Text("QR · Wi‑Fi · Bluetooth discovery")
                     .foregroundStyle(RainbowTheme.textMuted)
             }
             .padding(.top, 24)
@@ -27,6 +29,35 @@ struct PairingView: View {
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(GlowButtonStyle())
+
+            Button {
+                showBle.toggle()
+                if showBle { ble.start() } else { ble.stop() }
+            } label: {
+                Label(showBle ? "Stop Bluetooth scan" : "Find PC via Bluetooth", systemImage: "wave.3.right")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(GlowButtonStyle())
+
+            if showBle {
+                Text(ble.status)
+                    .font(.caption)
+                    .foregroundStyle(RainbowTheme.textMuted)
+                ForEach(ble.found) { peer in
+                    Button {
+                        // BLE gives IP — still need token from QR once, or reuse last token paste
+                        showManual = true
+                        manualJSON = "{\"v\":1,\"n\":\"\(peer.name)\",\"ip\":\"\(peer.ip)\",\"p\":\(peer.port),\"t\":\"PASTE_TOKEN_FROM_PC\",\"id\":\"ble\"}"
+                    } label: {
+                        Text("\(peer.name) · \(peer.ip)")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(GlowButtonStyle())
+                }
+                Text("Bluetooth findet die IP. Token einmal per QR/Copy vom PC holen — Daten laufen weiter über schnelles WLAN.")
+                    .font(.caption2)
+                    .foregroundStyle(RainbowTheme.textMuted)
+            }
 
             Button {
                 showManual = true
@@ -47,7 +78,7 @@ struct PairingView: View {
             }
 
             Spacer()
-            Text("LAN only · no cloud · AES token in QR")
+            Text("High-speed streams always use Wi‑Fi · BLE helps discovery")
                 .font(.caption)
                 .foregroundStyle(RainbowTheme.textMuted)
         }

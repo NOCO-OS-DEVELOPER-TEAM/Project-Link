@@ -15,23 +15,26 @@ struct ContentView: View {
                 TouchpadView()
                     .tabItem { Label("Pad", systemImage: "hand.draw") }
                     .tag(1)
-                    .disabled(!client.isPaired)
 
                 KeyboardView()
                     .tabItem { Label("Keys", systemImage: "keyboard") }
                     .tag(2)
 
+                NotepadView()
+                    .tabItem { Label("Notes", systemImage: "note.text") }
+                    .tag(3)
+
                 LiveScreenView()
                     .tabItem { Label("Screen", systemImage: "rectangle.connected.to.line.below") }
-                    .tag(3)
+                    .tag(4)
 
                 ClipboardFilesView()
                     .tabItem { Label("Share", systemImage: "square.and.arrow.up.on.square") }
-                    .tag(4)
+                    .tag(5)
 
                 LogsView()
                     .tabItem { Label("Logs", systemImage: "list.bullet.rectangle") }
-                    .tag(5)
+                    .tag(6)
             }
             .tint(.cyan)
         }

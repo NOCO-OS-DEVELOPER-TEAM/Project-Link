@@ -34,7 +34,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Camera is used to scan the Project Link pairing QR code on your PC.</string>
+	<string>Camera is used to scan the pairing QR code and optionally stream video to your PC.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Microphone can be streamed to your PC while Project Link is connected.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Bluetooth helps discover your Project Link PC on the LAN; fast data still uses Wi‑Fi.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Bluetooth helps discover your Project Link PC on the LAN.</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Project Link talks to your Windows PC on the local Wi‑Fi for mouse, screen, files and clipboard.</string>
 	<key>NSBonjourServices</key>

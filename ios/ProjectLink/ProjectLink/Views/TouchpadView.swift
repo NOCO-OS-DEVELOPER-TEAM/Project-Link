@@ -2,135 +2,115 @@ import SwiftUI
 
 struct TouchpadView: View {
     @ObservedObject var client = LinkClient.shared
-    @State private var lastPoint: CGPoint?
-    @State private var twoFingerStartY: CGFloat?
     @AppStorage("sensitivity") private var sensitivity: Double = 1.35
-    @State private var landscapeLock = true
+    @State private var showKeyboard = false
+    @State private var liveText = ""
+    @FocusState private var keyboardFocused: Bool
 
     var body: some View {
-        GeometryReader { geo in
-            VStack(spacing: 12) {
-                HStack {
-                    Text("Touchpad")
-                        .font(.title2.bold())
+        VStack(spacing: 10) {
+            HStack {
+                Text("Touchpad")
+                    .font(.title2.bold())
+                    .foregroundStyle(.white)
+                Spacer()
+                Button {
+                    showKeyboard.toggle()
+                    if showKeyboard {
+                        liveText = ""
+                        client.resetTypedBuffer()
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                        keyboardFocused = showKeyboard
+                    }
+                } label: {
+                    Label(showKeyboard ? "Hide keys" : "Keyboard", systemImage: "keyboard")
+                        .font(.subheadline.weight(.semibold))
                         .foregroundStyle(.white)
-                    Spacer()
-                    Text(client.isPaired ? "LIVE" : "OFFLINE")
-                        .font(.caption.weight(.bold))
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 5)
-                        .background(client.isPaired ? Color.mint.opacity(0.25) : Color.orange.opacity(0.25), in: Capsule())
-                        .foregroundStyle(client.isPaired ? .mint : .orange)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .background(RainbowTheme.aurora.opacity(0.35), in: Capsule())
                 }
-
-                pad
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(
-                        RoundedRectangle(cornerRadius: 24, style: .continuous)
-                            .fill(Color.black.opacity(0.45))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 24, style: .continuous)
-                                    .stroke(RainbowTheme.aurora, lineWidth: 1.5)
-                            )
-                    )
-
-                HStack(spacing: 12) {
-                    padButton("L", color: .white) {
-                        client.leftDown(); client.leftUp()
-                    }
-                    padButton("R", color: .cyan) {
-                        client.rightDown(); client.rightUp()
-                    }
-                    padButton("2×", color: .pink) {
-                        client.doubleClick()
-                    }
-                }
-
-                HStack {
-                    Text("Sensitivity")
-                        .foregroundStyle(RainbowTheme.textMuted)
-                    Slider(value: $sensitivity, in: 0.4...3.0, step: 0.05)
-                        .tint(.cyan)
-                        .onChange(of: sensitivity) { v in
-                            client.sensitivity = Float(v)
-                        }
-                    Text(String(format: "%.2f×", sensitivity))
-                        .foregroundStyle(.white)
-                        .monospacedDigit()
-                        .frame(width: 56, alignment: .trailing)
-                }
-
-                mediaRow
+                Text(client.isPaired ? "LIVE" : "OFFLINE")
+                    .font(.caption.weight(.bold))
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(client.isPaired ? Color.mint.opacity(0.25) : Color.orange.opacity(0.25), in: Capsule())
+                    .foregroundStyle(client.isPaired ? .mint : .orange)
             }
-            .padding(16)
-            .onAppear { client.sensitivity = Float(sensitivity) }
-        }
-    }
 
-    private var pad: some View {
-        ZStack {
-            Text("Swipe to move · tap to click · 2 fingers scroll")
-                .foregroundStyle(RainbowTheme.textMuted)
-                .padding()
-        }
-        .contentShape(Rectangle())
-        .gesture(
-            DragGesture(minimumDistance: 0)
-                .onChanged { value in
-                    // Approximate multi-touch via velocity magnitude heuristics is limited in SwiftUI;
-                    // primary finger move:
-                    if let last = lastPoint {
-                        let dx = value.location.x - last.x
-                        let dy = value.location.y - last.y
-                        client.move(dx: dx, dy: dy)
+            if showKeyboard {
+                // Hidden field drives system keyboard; every character goes to PC instantly
+                TextField("Type to PC…", text: $liveText)
+                    .textFieldStyle(.roundedBorder)
+                    .focused($keyboardFocused)
+                    .submitLabel(.done)
+                    .onChange(of: liveText) { newValue in
+                        client.sendTypedDelta(newValue)
                     }
-                    lastPoint = value.location
-                }
-                .onEnded { value in
-                    let travel = hypot(value.translation.width, value.translation.height)
-                    if travel < 6 {
-                        client.leftDown()
-                        client.leftUp()
-                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    .onSubmit {
+                        client.typeText("\n")
+                        liveText = ""
+                        client.resetTypedBuffer()
                     }
-                    lastPoint = nil
-                }
-        )
-        .simultaneousGesture(
-            MagnificationGesture().onEnded { _ in } // keep recognizer space soft
-        )
-        .gesture(
-            // Vertical scroll with two-finger-like long drag from right edge is awkward;
-            // dedicated scroll strip:
-            DragGesture(minimumDistance: 8)
-                .onChanged { _ in }
-        )
-        .overlay(alignment: .trailing) {
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Color.white.opacity(0.06))
-                .frame(width: 36)
-                .padding(10)
-                .gesture(
-                    DragGesture()
-                        .onChanged { value in
-                            if let y0 = twoFingerStartY {
-                                let dy = value.location.y - y0
-                                if abs(dy) > 8 {
-                                    client.wheel(Int16(clamping: Int((-dy / 12).rounded())))
-                                    twoFingerStartY = value.location.y
-                                }
-                            } else {
-                                twoFingerStartY = value.location.y
-                            }
-                        }
-                        .onEnded { _ in twoFingerStartY = nil }
+            }
+
+            ZStack {
+                Text("1 finger move · tap = click · 2 fingers = right-click · 2-finger drag = scroll")
+                    .font(.footnote)
+                    .foregroundStyle(RainbowTheme.textMuted)
+                    .multilineTextAlignment(.center)
+                    .padding()
+                    .allowsHitTesting(false)
+
+                TouchPadSurface(
+                    onMove: { dx, dy in client.move(dx: dx, dy: dy) },
+                    onLeftClick: { client.leftDown(); client.leftUp() },
+                    onRightClick: { client.rightDown(); client.rightUp() },
+                    onScroll: { d in client.wheel(d) }
                 )
-                .overlay(Text("↕").foregroundStyle(.white.opacity(0.4)))
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(
+                RoundedRectangle(cornerRadius: 24, style: .continuous)
+                    .fill(Color.black.opacity(0.45))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 24, style: .continuous)
+                            .stroke(RainbowTheme.aurora, lineWidth: 1.5)
+                    )
+            )
+
+            HStack(spacing: 12) {
+                padButton("L", color: .white) { client.leftDown(); client.leftUp() }
+                padButton("R", color: .cyan) { client.rightDown(); client.rightUp() }
+                padButton("2×", color: .pink) { client.doubleClick() }
+            }
+
+            HStack {
+                Text("Sensitivity")
+                    .foregroundStyle(RainbowTheme.textMuted)
+                Slider(value: $sensitivity, in: 0.4...3.0, step: 0.05)
+                    .tint(.cyan)
+                    .onChange(of: sensitivity) { v in
+                        client.sensitivity = Float(v)
+                        client.syncSensitivity(Float(v))
+                    }
+                Text(String(format: "%.2f×", sensitivity))
+                    .foregroundStyle(.white)
+                    .monospacedDigit()
+                    .frame(width: 56, alignment: .trailing)
+            }
+
+            mediaRow
         }
-        .onLongPressGesture(minimumDuration: 0.45) {
-            client.rightDown()
-            client.rightUp()
-            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        .padding(16)
+        .onAppear {
+            client.sensitivity = Float(sensitivity)
+            client.syncSensitivity(Float(sensitivity))
+            client.onRemoteSensitivity = { s in
+                sensitivity = Double(s)
+                client.sensitivity = s
+            }
         }
     }
 

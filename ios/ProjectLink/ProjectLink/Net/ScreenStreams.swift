@@ -96,7 +96,7 @@ final class PhoneScreenStreamer: ObservableObject {
     private var frames = 0
     private var lastFpsAt = Date()
     private var lastSend = Date.distantPast
-    private let minInterval: TimeInterval = 1.0 / 18.0
+    private let minInterval: TimeInterval = 1.0 / 36.0
 
     func start(host: String) {
         stop()

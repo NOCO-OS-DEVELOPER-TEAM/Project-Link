@@ -33,8 +33,10 @@ final class LinkClient: ObservableObject {
     private var latencyTimer: Timer?
     var sensitivity: Float = 1.35
     var clipboardSyncEnabled = false
+    var onRemoteSensitivity: ((Float) -> Void)?
     private var lastClipboardSent = ""
     private var suppressClipboard = false
+    private var typedBuffer = ""
 
     var host: String { pcHost }
     var isPaired: Bool { state == .paired }
@@ -152,6 +154,11 @@ final class LinkClient: ObservableObject {
 
     func sendClipboard(_ text: String) {
         guard clipboardSyncEnabled, !text.isEmpty, text != lastClipboardSent else { return }
+        pushClipboard(text)
+    }
+
+    func pushClipboard(_ text: String) {
+        guard !text.isEmpty else { return }
         lastClipboardSent = text
         let msg = ClipboardMsg(text: text, origin: "phone", ts: Int64(Date().timeIntervalSince1970 * 1000))
         sendJSON(.clipboardText, msg)
@@ -159,14 +166,57 @@ final class LinkClient: ObservableObject {
         log("Clipboard → PC (\(text.count) chars)")
     }
 
-    func requestPcStream(cfg: StreamConfigMsg = StreamConfigMsg(direction: "pc_to_phone", maxWidth: 1280, maxHeight: 720, fps: 28, jpegQuality: 55, touchAsMouse: true)) {
+    /// Unicode text injection on PC (SendInput KEYEVENTF_UNICODE).
+    func typeText(_ text: String) {
+        guard !text.isEmpty, state == .paired else { return }
+        sendJSON(.typeText, TypeTextMsg(text: text))
+    }
+
+    func resetTypedBuffer() { typedBuffer = "" }
+
+    /// Diff helper for live TextFields — only sends newly appended / deleted characters.
+    func sendTypedDelta(_ newValue: String) {
+        if newValue.hasPrefix(typedBuffer) {
+            let added = String(newValue.dropFirst(typedBuffer.count))
+            if !added.isEmpty { typeText(added) }
+            typedBuffer = newValue
+            return
+        }
+        if typedBuffer.hasPrefix(newValue) {
+            let del = typedBuffer.count - newValue.count
+            for _ in 0..<del {
+                key(0x08, down: true, mods: 0)
+                key(0x08, down: false, mods: 0)
+            }
+            typedBuffer = newValue
+            return
+        }
+        typedBuffer = newValue
+        typeText(newValue)
+    }
+
+    func syncSensitivity(_ value: Float) {
+        sensitivity = value
+        guard state == .paired else { return }
+        sendJSON(.settings, SettingsMsg(sensitivity: value, highFps: true))
+    }
+
+    func requestPcStream(cfg: StreamConfigMsg = StreamConfigMsg(direction: "pc_to_phone", maxWidth: 1600, maxHeight: 900, fps: 55, jpegQuality: 48, touchAsMouse: true)) {
         sendJSON(.streamConfig, cfg)
         sendJSON(.streamStart, cfg)
     }
 
     func notifyPhoneStream() {
-        let cfg = StreamConfigMsg(direction: "phone_to_pc", maxWidth: 720, maxHeight: 1280, fps: 20, jpegQuality: 45, touchAsMouse: false)
+        let cfg = StreamConfigMsg(direction: "phone_to_pc", maxWidth: 900, maxHeight: 1600, fps: 36, jpegQuality: 42, touchAsMouse: false)
         sendJSON(.streamStart, cfg)
+    }
+
+    func persistPairingForBroadcast() {
+        let defaults = UserDefaults(suiteName: "group.com.noco.projectlink") ?? .standard
+        defaults.set(pcHost, forKey: "pcHost")
+        defaults.set(pairingToken, forKey: "token")
+        defaults.set(true, forKey: "streamEnabled")
+        defaults.synchronize()
     }
 
     private func sendPairRequest() {
@@ -240,7 +290,15 @@ final class LinkClient: ObservableObject {
                 pcName = a.name
                 state = .paired
                 log("Paired ✓ \(a.name)")
+                persistPairingForBroadcast()
+                syncSensitivity(sensitivity)
                 UINotificationFeedbackGenerator().notificationOccurred(.success)
+            }
+        case .settings:
+            if let s = try? JSONDecoder().decode(SettingsMsg.self, from: payload), let sens = s.sensitivity {
+                sensitivity = sens
+                onRemoteSensitivity?(sens)
+                log("Sensitivity ← PC \(sens)")
             }
         case .pairReject:
             state = .failed

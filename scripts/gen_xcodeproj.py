@@ -15,10 +15,14 @@ files = [
     "Net/Protocol.swift",
     "Net/LinkClient.swift",
     "Net/ScreenStreams.swift",
+    "Net/AVStreamer.swift",
+    "Net/BleBrowser.swift",
     "Theme/RainbowTheme.swift",
     "Views/PairingView.swift",
     "Views/TouchpadView.swift",
+    "Views/TouchPadSurface.swift",
     "Views/KeyboardView.swift",
+    "Views/NotepadView.swift",
     "Views/LiveScreenView.swift",
     "Views/ClipboardFilesView.swift",
 ]
@@ -135,6 +139,8 @@ pbx = f'''// !$*UTF8*$!
 				{ids["Net/Protocol.swift"]} /* Protocol.swift */,
 				{ids["Net/LinkClient.swift"]} /* LinkClient.swift */,
 				{ids["Net/ScreenStreams.swift"]} /* ScreenStreams.swift */,
+				{ids["Net/AVStreamer.swift"]} /* AVStreamer.swift */,
+				{ids["Net/BleBrowser.swift"]} /* BleBrowser.swift */,
 			);
 			path = Net;
 			sourceTree = "<group>";
@@ -152,7 +158,9 @@ pbx = f'''// !$*UTF8*$!
 			children = (
 				{ids["Views/PairingView.swift"]} /* PairingView.swift */,
 				{ids["Views/TouchpadView.swift"]} /* TouchpadView.swift */,
+				{ids["Views/TouchPadSurface.swift"]} /* TouchPadSurface.swift */,
 				{ids["Views/KeyboardView.swift"]} /* KeyboardView.swift */,
+				{ids["Views/NotepadView.swift"]} /* NotepadView.swift */,
 				{ids["Views/LiveScreenView.swift"]} /* LiveScreenView.swift */,
 				{ids["Views/ClipboardFilesView.swift"]} /* ClipboardFilesView.swift */,
 			);

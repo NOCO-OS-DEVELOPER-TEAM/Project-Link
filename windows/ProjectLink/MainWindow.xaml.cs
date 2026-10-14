@@ -40,6 +40,7 @@ public partial class MainWindow : Window
         });
         _hub.StateChanged += () => Dispatcher.Invoke(RefreshStatus);
         _hub.PhoneFrame += jpeg => Dispatcher.BeginInvoke(() => ShowPhoneFrame(jpeg));
+        _hub.CameraIn.FrameReceived += jpeg => Dispatcher.BeginInvoke(() => ShowPhoneFrame(jpeg));
         _hub.Files.Progress += (id, p) => Dispatcher.Invoke(() => FileProgress.Text = $"Transfer {id[..Math.Min(8, id.Length)]}… {(int)(p * 100)}%");
         _hub.Files.Completed += _ => Dispatcher.Invoke(() => FileProgress.Text = "Transfer complete");
         InboxPath.Text = $"Inbox: {_hub.Files.Inbox}";
@@ -107,6 +108,8 @@ public partial class MainWindow : Window
             ConnDetail.Text = "Waiting for iPhone…\nScan the QR code";
         }
         LatencyText.Text = _hub.LastRttMs > 0 ? $"RTT {_hub.LastRttMs} ms" : "RTT —";
+        if (SensSlider != null && Math.Abs(SensSlider.Value - _hub.Sensitivity) > 0.04)
+            SensSlider.Value = _hub.Sensitivity;
     }
 
     void RefreshStats()
@@ -148,11 +151,19 @@ public partial class MainWindow : Window
         System.Windows.Clipboard.SetText(_hub.BuildQrPayload());
     }
 
-    void SensSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    async void SensSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (_hub == null || SensLabel == null) return;
         _hub.Sensitivity = (float)e.NewValue;
         SensLabel.Text = $"Sensitivity {e.NewValue:0.00}×";
+        if (_hub.IsPaired)
+        {
+            try
+            {
+                await _hub.SendAsync(MsgType.Settings, new SettingsMsg { Sensitivity = (float)e.NewValue, HighFps = true });
+            }
+            catch { /* ignore */ }
+        }
     }
 
     void Tab_Checked(object sender, RoutedEventArgs e)

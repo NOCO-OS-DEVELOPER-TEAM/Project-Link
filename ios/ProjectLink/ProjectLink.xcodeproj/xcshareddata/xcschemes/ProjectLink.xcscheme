@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F2619782EB554067B1362DD2"
+               BlueprintIdentifier = "878AD8F6296F4757A43547CD"
                BuildableName = "ProjectLink.app"
                BlueprintName = "ProjectLink"
                ReferencedContainer = "container:ProjectLink.xcodeproj">
@@ -36,7 +36,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F2619782EB554067B1362DD2"
+            BlueprintIdentifier = "878AD8F6296F4757A43547CD"
             BuildableName = "ProjectLink.app"
             BlueprintName = "ProjectLink"
             ReferencedContainer = "container:ProjectLink.xcodeproj">
@@ -44,3 +44,4 @@
       </BuildableProductRunnable>
    </LaunchAction>
 </Scheme>
+

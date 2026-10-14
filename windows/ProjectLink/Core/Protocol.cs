@@ -32,10 +32,12 @@ public enum MsgType : ushort
     StreamConfig = 32,
     LaunchApp = 40,
     MediaKey = 41,
+    TypeText = 42,
     Status = 50,
     Log = 60,
     LatencyProbe = 70,
-    LatencyReply = 71
+    LatencyReply = 71,
+    Settings = 80
 }
 
 [Flags]
@@ -177,8 +179,8 @@ public sealed class StreamConfigMsg
     public string Direction { get; set; } = "pc_to_phone"; // or phone_to_pc
     public int MaxWidth { get; set; } = 1280;
     public int MaxHeight { get; set; } = 720;
-    public int Fps { get; set; } = 30;
-    public int JpegQuality { get; set; } = 55;
+    public int Fps { get; set; } = 55;
+    public int JpegQuality { get; set; } = 48;
     public bool TouchAsMouse { get; set; } = true;
 }
 
@@ -198,6 +200,17 @@ public sealed class MediaKeyMsg
 public sealed class LaunchAppMsg
 {
     public string Query { get; set; } = "";
+}
+
+public sealed class TypeTextMsg
+{
+    public string Text { get; set; } = "";
+}
+
+public sealed class SettingsMsg
+{
+    public float? Sensitivity { get; set; }
+    public bool? HighFps { get; set; }
 }
 
 public static class DiscoveryBeacon

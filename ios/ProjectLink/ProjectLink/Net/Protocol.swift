@@ -26,6 +26,8 @@ enum MsgType: UInt16 {
     case streamConfig = 32
     case launchApp = 40
     case mediaKey = 41
+    case typeText = 42
+    case settings = 80
     case status = 50
     case latencyProbe = 70
     case latencyReply = 71
@@ -93,6 +95,15 @@ struct MediaKeyMsg: Codable {
 
 struct LaunchAppMsg: Codable {
     var query: String
+}
+
+struct TypeTextMsg: Codable {
+    var text: String
+}
+
+struct SettingsMsg: Codable {
+    var sensitivity: Float?
+    var highFps: Bool?
 }
 
 enum InputFlags: UInt16 {

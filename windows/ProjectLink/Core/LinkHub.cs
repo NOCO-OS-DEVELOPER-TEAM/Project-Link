@@ -39,15 +39,19 @@ public sealed class LinkHub : IDisposable
 
     public ScreenCaptureService ScreenOut { get; }
     public ScreenReceiveService ScreenIn { get; }
+    public CameraReceiveService CameraIn { get; }
     public ClipboardSyncService Clipboard { get; }
     public FileTransferService Files { get; }
+    public BleAdvertiser Ble { get; }
 
     public LinkHub()
     {
         ScreenOut = new ScreenCaptureService(L);
         ScreenIn = new ScreenReceiveService(L);
+        CameraIn = new CameraReceiveService(L);
         Clipboard = new ClipboardSyncService(L);
         Files = new FileTransferService(L);
+        Ble = new BleAdvertiser(L);
         Clipboard.LocalTextChanged += async text =>
         {
             if (!IsPaired) return;
@@ -106,6 +110,8 @@ public sealed class LinkHub : IDisposable
 
         await ScreenOut.StartAsync();
         await ScreenIn.StartAsync();
+        await CameraIn.StartAsync();
+        Ble.Start(LanIp, Ports.Control, DeviceName);
 
         _ = AcceptControlLoop(ct);
         _ = InputLoop(ct);
@@ -275,6 +281,36 @@ public sealed class LinkHub : IDisposable
                 }
                 break;
             }
+            case MsgType.TypeText:
+            {
+                var m = FrameCodec.DecodeJson<TypeTextMsg>(payload);
+                if (!string.IsNullOrEmpty(m?.Text))
+                    InputInjector.TypeText(m.Text);
+                break;
+            }
+            case MsgType.Settings:
+            {
+                var m = FrameCodec.DecodeJson<SettingsMsg>(payload);
+                if (m?.Sensitivity is float s && s > 0.1f && s < 5f)
+                {
+                    Sensitivity = s;
+                    L($"Sensitivity ← phone {s:0.00}×");
+                    StateChanged?.Invoke();
+                }
+                if (m?.HighFps == true)
+                {
+                    ScreenOut.UpdateConfig(new StreamConfigMsg
+                    {
+                        Direction = "pc_to_phone",
+                        MaxWidth = 1600,
+                        MaxHeight = 900,
+                        Fps = 55,
+                        JpegQuality = 48,
+                        TouchAsMouse = true
+                    });
+                }
+                break;
+            }
             case MsgType.FileOffer:
             {
                 var o = FrameCodec.DecodeJson<FileOfferMsg>(payload);
@@ -433,6 +469,8 @@ public sealed class LinkHub : IDisposable
         _discovery?.Dispose();
         ScreenOut.Dispose();
         ScreenIn.Dispose();
+        CameraIn.Dispose();
+        Ble.Dispose();
         Clipboard.Dispose();
         _cts?.Dispose();
     }
